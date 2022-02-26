@@ -46,34 +46,8 @@ function uploadTrans() {
 
   getAll.onsuccess = function() {
     // calls the api to create a single transaction if only one was stored
-    if (getAll.result.length === 1 ) {
+    if (getAll.result.length > 1 ) {
       fetch('/api/transaction', {
-        method: 'POST',
-        body: JSON.stringify(getAll.result),
-        headers: {
-          Accept: 'application/json, text/plain, */*',
-          'Content-Type': 'application/json'
-        }
-      })
-        .then(response => response.json())
-        .then(serverResponse => {
-          if (serverResponse.message) {
-            throw new Error(serverResponse);
-          }
-
-          const transaction = db.transaction(['new_trans'], 'readwrite');
-
-          const transObjectStore = transaction.objectStore('new_trans');
-
-          transObjectStore.clear();
-
-          alert('All saved transactions have been submitted');
-        })
-        .catch(err => {
-          console.log(err);
-        });
-    } else if (getAll.result.length > 1 ) {
-      fetch('/api/transaction/bulk', {
         method: 'POST',
         body: JSON.stringify(getAll.result),
         headers: {
